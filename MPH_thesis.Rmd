@@ -5,3 +5,33 @@ date: "2025-04-08"
 output: pdf_document
 ---
 
+## Libraries
+```{r libraries, echo = T, message = FALSE, results='hide', warning=FALSE}
+library(readxl) # to import excel files
+library(tidyverse)
+# library(rjoinpoint) cannot be used as this requires the Jointpoint software NOT compatiable with MAC
+# install.packages("segmented")
+library(segmented)
+library(purrr)
+```
+
+## Importing and Organizing Data
+```{r data, echo = T, message = FALSE, results='hide', warning=FALSE}
+# loading data
+original = read_excel("./USCS 2001-2019 Oral Cancer by Region and Metro.xlsx")
+
+original = c("by region", "by metro", "by region and metro", 
+                   "by region and sex", "by region and raceEth", 
+                   "by metro and raceEth", "by region and age", 
+                   "by metro and age")
+
+# Load only target sheets
+data_list = lapply(original, function(sheet) {
+  read_excel(file_path, sheet = sheet)
+})
+names(data_list) = original
+
+list2env(data_list, envir = .GlobalEnv)
+
+
+```
